@@ -192,6 +192,8 @@ class NeptuneBase(ABC):
 
             # Delete the specific relationship between nodes
             cypher, params = self._delete_entities_cypher(source, destination, relationship, user_id)
+            logger.warning("Deleting via Boto graph")
+            result_boto = self.botoGraph.query(cypher, params)
             result = self.graph.query(cypher, params=params)
             results.append(result)
         return results
@@ -324,6 +326,8 @@ class NeptuneBase(ABC):
 
     def delete_all(self, filters):
         cypher, params = self._delete_all_cypher(filters)
+        logger.warning("Deleting via Boto graph")
+        self.botoGraph.query(cypher, params)
         self.graph.query(cypher, params=params)
 
     @abstractmethod

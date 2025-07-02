@@ -1,12 +1,65 @@
 import logging
+import json
+from typing import Optional
 from .neptune_base import NeptuneBase
 
 try:
+    import boto3
     from langchain_aws import NeptuneAnalyticsGraph, NeptuneGraph
+    from botocore.client import BaseClient
 except ImportError:
-    raise ImportError("langchain_aws is not installed. Please install it using 'make install_all'.")
+    raise ImportError("The 'boto3' library is required. Please install it using 'pip install boto3'.")
 
 logger = logging.getLogger(__name__)
+
+
+class NeptuneGraphProxy:
+    def __init__(
+            self,
+            graph_id: str,
+            client: BaseClient,
+            logger: Optional[logging.Logger] = None,
+    ):
+        """
+        Abstraction layer to provide the same API compare toe LangChain AWS
+        Constructs a NeptuneGraph object for AWS service interaction,
+        with optional custom logger and boto client.
+        """
+        self.graph_id = graph_id
+        self.client = client
+        self.logger = logger or logging.getLogger(__name__)
+
+    def query(
+        self, query_string: str, parameter_map: Optional[dict] = None
+    ):
+        """
+        Wrapper method to execute an incoming OpenCypher query
+        and return the result from the Boto client.
+
+        Args:
+            query_string (str): OpenCypher query in string format.
+            parameter_map (dict, optional): Parameter map for parameterized queries. Defaults to None.
+
+        Returns:
+            dict: Result from the Boto client.
+        """
+        query_params = {
+            "graphIdentifier": self.graph_id,
+            "queryString": query_string,
+            "language": "OPEN_CYPHER",
+            "parameters": {},
+        }
+
+        # Add parameters if provided
+        if parameter_map:
+            query_params["parameters"] = parameter_map
+
+        self.logger.warning(
+            f"Executing generic query with data [{query_params}] on graph [{self.graph_id}]"
+        )
+        response = self.client.execute_query(**query_params)  # type: ignore[attr-defined]
+
+        return json.loads(response["payload"].read())["results"]
 
 
 class MemoryGraph(NeptuneBase):
@@ -17,6 +70,13 @@ class MemoryGraph(NeptuneBase):
         endpoint = self.config.graph_store.config.endpoint
         if endpoint and endpoint.startswith("neptune-graph://"):
             graph_identifier = endpoint.replace("neptune-graph://", "")
+            # Construct the object
+            logger.warning("Constrcut object with proxy client.")
+            client = boto3.client("neptune-graph")
+            self.botoGraph = NeptuneGraphProxy(
+                graph_id=graph_identifier,
+                client=client
+            )
             self.graph = NeptuneAnalyticsGraph(graph_identifier)
 
         if not self.graph:
