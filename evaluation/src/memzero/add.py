@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 from tqdm import tqdm
 
-from config import CONFIG
+from ..config import CONFIG
 from mem0 import MemoryClient, Memory
 
 load_dotenv()

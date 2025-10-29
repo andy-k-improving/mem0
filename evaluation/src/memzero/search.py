@@ -9,7 +9,7 @@ from jinja2 import Template
 from openai import OpenAI
 from prompts import ANSWER_PROMPT, ANSWER_PROMPT_GRAPH
 from tqdm import tqdm
-from config import CONFIG
+from ..config import CONFIG
 
 from mem0 import MemoryClient, Memory
 
