@@ -38,7 +38,6 @@ Just return the label CORRECT or WRONG in a json format with the key as "label".
 
 def evaluate_llm_judge(question, gold_answer, generated_answer):
     """Evaluate the generated answer against the gold answer using an LLM judge."""
-    # return 1
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
@@ -54,7 +53,6 @@ def evaluate_llm_judge(question, gold_answer, generated_answer):
     )
     label = json.loads(extract_json(response.choices[0].message.content))["label"]
     return 1 if label == "CORRECT" else 0
-
 
 
 def main():

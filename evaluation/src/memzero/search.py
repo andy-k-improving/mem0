@@ -9,6 +9,7 @@ from jinja2 import Template
 from openai import OpenAI
 from prompts import ANSWER_PROMPT, ANSWER_PROMPT_GRAPH
 from tqdm import tqdm
+from config import CONFIG
 
 from mem0 import MemoryClient, Memory
 
@@ -16,49 +17,10 @@ load_dotenv()
 
 
 class MemorySearch:
-    config = {
-        "embedder": {
-            "provider": "aws_bedrock",
-            "config": {
-                "model": "amazon.titan-embed-text-v2:0",
-                "embedding_dims": 1024
-            },
-        },
-
-        "llm": {
-            "provider": "aws_bedrock",
-            "config": {
-                "model": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-                "temperature": 0.1,
-                "max_tokens": 2000,
-            }
-        },
-        # "vector_store": {
-        #     "provider": "faiss",
-        #     "config": {
-        #         "collection_name": "test",
-        #         "path": "/tmp/faiss_memories"
-        #     }
-        # }
-
-        "vector_store": {
-            "provider": "neptune",
-            "config": {
-                "collection_name": "test",
-                "endpoint": f"neptune-graph://{os.environ.get('GRAPH_ID')}",
-            },
-        },
-        # "custom_update_memory_prompt": custom_instructions
-    }
 
 
     def __init__(self, output_path="results.json", top_k=10, filter_memories=False, is_graph=False):
-        # self.mem0_client = MemoryClient(
-        #     api_key=os.getenv("MEM0_API_KEY"),
-        #     org_id=os.getenv("MEM0_ORGANIZATION_ID"),
-        #     project_id=os.getenv("MEM0_PROJECT_ID"),
-        # )
-        self.mem0_client = Memory.from_config(config_dict=self.config)
+        self.mem0_client = Memory.from_config(config_dict=CONFIG)
         self.top_k = top_k
         self.openai_client = OpenAI()
         self.results = defaultdict(list)
