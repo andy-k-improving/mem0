@@ -30,12 +30,15 @@ def main():
     parser.add_argument("--filter_memories", action="store_true", default=False, help="Whether to filter memories")
     parser.add_argument("--is_graph", action="store_true", default=False, help="Whether to use graph-based search")
     parser.add_argument("--num_chunks", type=int, default=1, help="Number of chunks to process")
+    parser.add_argument("--data_path", type=str, default="dataset/locomo10.json", help="Path of the dataset")
+    parser.add_argument("--max_worker", type=int, default=1, help="No. of workers")
 
     args = parser.parse_args()
 
     args.technique_type="mem0"
     args.method = "search"
     args.output_folder="results/"
+    args.data_path = "dataset/locomo10_1.json"
     args.top_k=30
 
     # Add your experiment logic here
@@ -43,8 +46,8 @@ def main():
 
     if args.technique_type == "mem0":
         if args.method == "add":
-            memory_manager = MemoryADD(data_path="dataset/locomo10_1.json", is_graph=args.is_graph)
-            memory_manager.process_all_conversations(max_workers=1)
+            memory_manager = MemoryADD(data_path=args.data_path, is_graph=args.is_graph)
+            memory_manager.process_all_conversations(max_workers=args.max_worker)
         elif args.method == "search":
             output_file_path = os.path.join(
                 args.output_folder,
