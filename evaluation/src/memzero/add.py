@@ -60,12 +60,13 @@ class MemoryADD:
         return self.data
 
     def add_memory(self, user_id, message, metadata, retries=3):
+        delay = float(os.getenv("ATTEMPT_DELAY", 1.5))
         for attempt in range(retries):
             try:
                 _ = self.mem0_client.add(
                     message, user_id=user_id, metadata=metadata
                 )
-                time.sleep(os.getenv("ATTEMPT_DELAY", 1.5))
+                time.sleep(delay)
                 return
             except Exception as e:
                 if attempt < retries - 1:

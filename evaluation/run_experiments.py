@@ -31,15 +31,9 @@ def main():
     parser.add_argument("--is_graph", action="store_true", default=False, help="Whether to use graph-based search")
     parser.add_argument("--num_chunks", type=int, default=1, help="Number of chunks to process")
     parser.add_argument("--data_path", type=str, default="dataset/locomo10.json", help="Path of the dataset")
-    parser.add_argument("--max_worker", type=int, default=1, help="No. of workers")
+    parser.add_argument("--max_worker", type=int, default=2, help="No. of workers")
 
     args = parser.parse_args()
-
-    args.technique_type="mem0"
-    args.method = "search"
-    args.output_folder="results/"
-    args.data_path = "dataset/locomo10_1.json"
-    args.top_k=30
 
     # Add your experiment logic here
     print(f"Running experiments with technique: {args.technique_type}, chunk size: {args.chunk_size}")

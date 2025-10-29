@@ -12,18 +12,16 @@ CONFIG = {
     "llm": {
         "provider": "aws_bedrock",
         "config": {
-            "model": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
-            "temperature": 0.1,
+            # "model": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+            # "model": "us.anthropic.claude-3-5-haiku-20241022-v1:0",
+            "model": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+            # "model": "us.qwen.qwen3-32b-v1:0",
+            # "model": "deepseek.v3-v1:0",
+            # "model": "openai.gpt-oss-20b-1:0",
+            # "temperature": 0.1,
             "max_tokens": 2000,
         },
     },
-    # "vector_store": {
-    #     "provider": "faiss",
-    #     "config": {
-    #         "collection_name": "test",
-    #         "path": "/tmp/faiss_memories"
-    #     }
-    # }
     "vector_store": {
         "provider": "neptune",
         "config": {

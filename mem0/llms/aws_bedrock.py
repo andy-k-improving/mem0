@@ -288,7 +288,7 @@ class AWSBedrockLLM(LLMBase):
             input_body = {
                 "messages": [{"role": "user", "content": [{"type": "text", "text": prompt}]}],
                 "max_tokens": self.model_config.get("max_tokens", 2000),
-                "temperature": self.model_config.get("temperature", 0.1),
+                # "temperature": self.model_config.get("temperature", 0.1),
                 "top_p": self.model_config.get("top_p", 0.9),
                 "anthropic_version": "bedrock-2023-05-31",
             }
@@ -533,7 +533,7 @@ class AWSBedrockLLM(LLMBase):
                 "messages": formatted_messages,
                 "inferenceConfig": {
                     "maxTokens": self.model_config.get("max_tokens", 2000),
-                    "temperature": self.model_config.get("temperature", 0.1),
+                    # "temperature": self.model_config.get("temperature", 0.1),
                     "topP": self.model_config.get("top_p", 0.9),
                 }
             }
