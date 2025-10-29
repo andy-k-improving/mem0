@@ -33,12 +33,17 @@ def main():
 
     args = parser.parse_args()
 
+    args.technique_type="mem0"
+    args.method = "search"
+    args.output_folder="results/"
+    args.top_k=30
+
     # Add your experiment logic here
     print(f"Running experiments with technique: {args.technique_type}, chunk size: {args.chunk_size}")
 
     if args.technique_type == "mem0":
         if args.method == "add":
-            memory_manager = MemoryADD(data_path="dataset/locomo10.json", is_graph=args.is_graph)
+            memory_manager = MemoryADD(data_path="dataset/locomo10_1.json", is_graph=args.is_graph)
             memory_manager.process_all_conversations(max_workers=1)
         elif args.method == "search":
             output_file_path = os.path.join(

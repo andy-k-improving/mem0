@@ -55,7 +55,7 @@ class MemoryADD:
         "llm": {
             "provider": "aws_bedrock",
             "config": {
-                "model": "anthropic.claude-3-5-sonnet-20241022-v2:0",
+                "model": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
                 "temperature": 0.1,
                 "max_tokens": 2000,
             }
@@ -75,6 +75,7 @@ class MemoryADD:
                 "endpoint": f"neptune-graph://{os.environ.get('GRAPH_ID')}",
             },
         },
+        # "custom_update_memory_prompt": custom_instructions
     }
 
 
@@ -109,8 +110,8 @@ class MemoryADD:
                 _ = self.mem0_client.add(
                     message, user_id=user_id, metadata=metadata
                 )
-                print(message)
-                time.sleep(10)
+                # print(message)
+                time.sleep(1.5)
                 return
             except Exception as e:
                 if attempt < retries - 1:
