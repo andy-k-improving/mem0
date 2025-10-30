@@ -4,7 +4,8 @@ import json
 import threading
 from collections import defaultdict
 
-from metrics.llm_judge import evaluate_llm_judge
+from metrics.bedrock_llm_judge import evaluate_llm_judge
+# from metrics.llm_judge import evaluate_llm_judge
 from metrics.utils import calculate_bleu_scores, calculate_metrics
 from tqdm import tqdm
 
@@ -23,6 +24,7 @@ def process_item(item_data):
         if category == "5":
             continue
 
+        print("Processing item...")
         metrics = calculate_metrics(pred_answer, gt_answer)
         bleu_scores = calculate_bleu_scores(pred_answer, gt_answer)
         llm_score = evaluate_llm_judge(question, gt_answer, pred_answer)
