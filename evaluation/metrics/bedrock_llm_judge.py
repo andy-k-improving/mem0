@@ -18,7 +18,7 @@ config = {
     "llm": {
         "provider": "aws_bedrock",
         "config": {
-            "model": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+            "model": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
             "temperature": 0.1,
             "max_tokens": 2000,
         }
@@ -55,9 +55,6 @@ Question: {question}
 Gold answer: {gold_answer}
 Generated answer: {generated_answer}
 
-First, provide a short (one sentence) explanation of your reasoning, then finish with CORRECT or WRONG. 
-Do NOT include both CORRECT and WRONG in your response, or it will break the evaluation script.
-
 Just return the label CORRECT or WRONG in a json format with the key as "label".
 """
 
@@ -72,7 +69,7 @@ def evaluate_llm_judge(question, gold_answer, generated_answer):
             ),
         }
     ]
-    
+
     response = bedrock_llm.generate_response(messages)
     label = json.loads(extract_json(response))["label"]
     return 1 if label == "CORRECT" else 0
