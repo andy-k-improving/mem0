@@ -288,8 +288,8 @@ class AWSBedrockLLM(LLMBase):
             input_body = {
                 "messages": [{"role": "user", "content": [{"type": "text", "text": prompt}]}],
                 "max_tokens": self.model_config.get("max_tokens", 2000),
-                # "temperature": self.model_config.get("temperature", 0.1),
-                "top_p": self.model_config.get("top_p", 0.9),
+                "temperature": self.model_config.get("temperature", 0.0),
+                # "top_p": self.model_config.get("top_p", 0.0),
                 "anthropic_version": "bedrock-2023-05-31",
             }
         elif self.provider == "meta":
@@ -533,8 +533,8 @@ class AWSBedrockLLM(LLMBase):
                 "messages": formatted_messages,
                 "inferenceConfig": {
                     "maxTokens": self.model_config.get("max_tokens", 2000),
-                    # "temperature": self.model_config.get("temperature", 0.1),
-                    "topP": self.model_config.get("top_p", 0.9),
+                    "temperature": self.model_config.get("temperature", 0.0),
+                    # "topP": self.model_config.get("top_p", 0.0),
                 }
             }
 
