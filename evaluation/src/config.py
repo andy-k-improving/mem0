@@ -22,6 +22,12 @@ CONFIG = {
             "max_tokens": 2000,
         },
     },
+    "graph_store": {
+        "provider": "neptune",
+        "config": {
+            "endpoint": f"neptune-graph://{os.getenv('GRAPH_ID', 'default-graph-id')}",
+        },
+    },
     "vector_store": {
         "provider": "neptune",
         "config": {

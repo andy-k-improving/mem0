@@ -35,6 +35,11 @@ def main():
 
     args = parser.parse_args()
 
+    args.technique_type="mem0"
+    args.method = "search"
+    args.data_path = "../hf_example/dataset/locomo10_1.json"
+    args.is_graph=True
+
     # Add your experiment logic here
     print(f"Running experiments with technique: {args.technique_type}, chunk size: {args.chunk_size}")
 

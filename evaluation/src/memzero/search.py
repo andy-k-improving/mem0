@@ -45,8 +45,6 @@ class MemorySearch:
                         user_id=user_id,
                         limit=self.top_k,
                         filters=self.filter_memories,
-                        enable_graph=True,
-                        output_format="v1.1",
                     )
                 else:
                     memories = self.mem0_client.search(
@@ -81,7 +79,7 @@ class MemorySearch:
                 for memory in memories["results"]
             ]
             graph_memories = [
-                {"source": relation["source"], "relationship": relation["relationship"], "target": relation["target"]}
+                {"source": relation["source"], "relationship": relation["relationship"], "destination": relation["destination"]}
                 for relation in memories["relations"]
             ]
         return semantic_memories, graph_memories, end_time - start_time
