@@ -18,7 +18,7 @@ config = {
     "llm": {
         "provider": "aws_bedrock",
         "config": {
-            "model": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+            "model": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
             "temperature": 0.0,
             "max_tokens": 2000,
         }

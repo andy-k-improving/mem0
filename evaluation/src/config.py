@@ -5,10 +5,19 @@ CONFIG = {
     "embedder": {
         "provider": "aws_bedrock",
         "config": {
+            # "model": "cohere.embed-english-v3",
+            # "model": "amazon.titan-embed-text-v1",
             "model": "amazon.titan-embed-text-v2:0",
             "embedding_dims": 1024,
         },
     },
+    # "embedder": {
+    #     "provider": "ollama",
+    #     "config": {
+    #         "model": "mxbai-embed-large",
+    #         "embedding_dims": 1024
+    #     }
+    # },
     "llm": {
         "provider": "aws_bedrock",
         "config": {
@@ -35,4 +44,23 @@ CONFIG = {
             "endpoint": f"neptune-graph://{os.getenv('GRAPH_ID', 'default-graph-id')}",
         },
     },
+
+    # "graph_store": {
+    #     "provider": "neo4j",
+    #     "config": {
+    #         "url": "neo4j://localhost:7687",
+    #         "username": "neo4j",
+    #         "password": "neo4jtest",
+    #     },
+    # },
+    # "vector_store": {
+    #     "provider": "qdrant",
+    #     "config": {
+    #         "collection_name": "mem0_test",
+    #         "host": "localhost",
+    #         "port": 6333,
+    #         "embedding_model_dims": 1024
+    #     }
+    # }
+
 }

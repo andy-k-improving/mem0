@@ -9,6 +9,7 @@ from jinja2 import Template
 from openai import OpenAI
 from prompts import ANSWER_PROMPT, ANSWER_PROMPT_GRAPH
 from tqdm import tqdm
+from mem0.llms.aws_bedrock import AWSBedrockLLM
 from ..config import CONFIG
 
 from mem0 import MemoryClient, Memory
@@ -23,6 +24,7 @@ class MemorySearch:
         self.mem0_client = Memory.from_config(config_dict=CONFIG)
         self.top_k = top_k
         self.openai_client = OpenAI()
+        self.bedrock_client = AWSBedrockLLM(CONFIG["llm"]["config"])
         self.results = defaultdict(list)
         self.output_path = output_path
         self.filter_memories = filter_memories
@@ -39,7 +41,6 @@ class MemorySearch:
         while retries < max_retries:
             try:
                 if self.is_graph:
-                    print("Searching with graph")
                     memories = self.mem0_client.search(
                         query,
                         user_id=user_id,
@@ -107,13 +108,17 @@ class MemorySearch:
         )
 
         t1 = time.time()
-        response = self.openai_client.chat.completions.create(
-            model=os.getenv("MODEL"), messages=[{"role": "system", "content": answer_prompt}], temperature=0.0
+        # response = self.openai_client.chat.completions.create(
+        #     model=os.getenv("MODEL"), messages=[{"role": "system", "content": answer_prompt}], temperature=0.0
+        # )
+        response = self.bedrock_client.generate_response(
+            messages=[{"role": "user", "content": answer_prompt}],
+            temperature=0.0
         )
         t2 = time.time()
         response_time = t2 - t1
         return (
-            response.choices[0].message.content,
+            response,
             speaker_1_memories,
             speaker_2_memories,
             speaker_1_memory_time,
@@ -129,6 +134,7 @@ class MemorySearch:
         category = val.get("category", -1)
         evidence = val.get("evidence", [])
         adversarial_answer = val.get("adversarial_answer", "")
+
 
         (
             response,
@@ -158,6 +164,7 @@ class MemorySearch:
             "speaker_2_graph_memories": speaker_2_graph_memories,
             "response_time": response_time,
         }
+        print("Completing a question....")
 
         # Save results after each question is processed
         with open(self.output_path, "w") as f:
@@ -178,6 +185,11 @@ class MemorySearch:
             speaker_a_user_id = f"{speaker_a}_{idx}"
             speaker_b_user_id = f"{speaker_b}_{idx}"
 
+            # items = tqdm(
+            #     qa, total=len(qa), desc=f"Processing questions for conversation {idx}", leave=False
+            # )
+            # self.process_questions_parallel(items, speaker_a_user_id, speaker_b_user_id)
+
             for question_item in tqdm(
                 qa, total=len(qa), desc=f"Processing questions for conversation {idx}", leave=False
             ):
@@ -192,7 +204,8 @@ class MemorySearch:
         with open(self.output_path, "w") as f:
             json.dump(self.results, f, indent=4)
 
-    def process_questions_parallel(self, qa_list, speaker_a_user_id, speaker_b_user_id, max_workers=1):
+
+    def process_questions_parallel(self, qa_list, speaker_a_user_id, speaker_b_user_id, max_workers=10):
         def process_single_question(val):
             result = self.process_question(val, speaker_a_user_id, speaker_b_user_id)
             # Save results after each question is processed

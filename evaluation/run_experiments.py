@@ -31,14 +31,16 @@ def main():
     parser.add_argument("--is_graph", action="store_true", default=False, help="Whether to use graph-based search")
     parser.add_argument("--num_chunks", type=int, default=1, help="Number of chunks to process")
     parser.add_argument("--data_path", type=str, default="dataset/locomo10.json", help="Path of the dataset")
-    parser.add_argument("--max_worker", type=int, default=2, help="No. of workers")
+    parser.add_argument("--max_worker", type=int, default=3, help="No. of workers")
+    parser.add_argument("--suffix", type=str, default="_", help="Optional suffix")
 
     args = parser.parse_args()
-
-    args.technique_type="mem0"
-    args.method = "search"
-    args.data_path = "../hf_example/dataset/locomo10_1.json"
-    args.is_graph=True
+    #
+    # args.technique_type="mem0"
+    # args.method = "search"
+    # args.data_path = "../hf_example/dataset_v3/locomo10_2.json"
+    # args.suffix = "2"
+    # args.is_graph=True
 
     # Add your experiment logic here
     print(f"Running experiments with technique: {args.technique_type}, chunk size: {args.chunk_size}")
@@ -50,7 +52,7 @@ def main():
         elif args.method == "search":
             output_file_path = os.path.join(
                 args.output_folder,
-                f"mem0_results_top_{args.top_k}_filter_{args.filter_memories}_graph_{args.is_graph}.json",
+                f"mem0_results_top_{args.top_k}_filter_{args.filter_memories}_graph_{args.is_graph}_{args.suffix}.json",
             )
             memory_searcher = MemorySearch(output_file_path, args.top_k, args.filter_memories, args.is_graph)
             memory_searcher.process_data_file(args.data_path)

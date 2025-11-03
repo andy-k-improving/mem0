@@ -60,13 +60,11 @@ class MemoryADD:
         return self.data
 
     def add_memory(self, user_id, message, metadata, retries=3):
-        delay = float(os.getenv("ATTEMPT_DELAY", 0))
         for attempt in range(retries):
             try:
                 _ = self.mem0_client.add(
                     message, user_id=user_id, metadata=metadata
                 )
-                time.sleep(delay)
                 return
             except Exception as e:
                 if attempt < retries - 1:
@@ -89,8 +87,8 @@ class MemoryADD:
         speaker_b_user_id = f"{speaker_b}_{idx}"
 
         # delete all memories for the two users
-        self.mem0_client.delete_all(user_id=speaker_a_user_id)
-        self.mem0_client.delete_all(user_id=speaker_b_user_id)
+        # self.mem0_client.delete_all(user_id=speaker_a_user_id)
+        # self.mem0_client.delete_all(user_id=speaker_b_user_id)
 
         for key in conversation.keys():
             if key in ["speaker_a", "speaker_b"] or "date" in key or "timestamp" in key:
