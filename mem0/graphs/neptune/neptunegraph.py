@@ -343,7 +343,6 @@ class MemoryGraph(NeptuneBase):
             ) YIELD distance
             WITH source_candidate, distance AS cosine_similarity
             WHERE cosine_similarity >= $threshold
-            AND source_candidate.name IS NOT NULL
 
             WITH source_candidate, cosine_similarity
             ORDER BY cosine_similarity DESC
@@ -381,7 +380,6 @@ class MemoryGraph(NeptuneBase):
                 ) YIELD distance
                 WITH destination_candidate, distance AS cosine_similarity
                 WHERE cosine_similarity >= $threshold
-                AND destination_candidate.name IS NOT NULL
 
                 WITH destination_candidate, cosine_similarity
                 ORDER BY cosine_similarity DESC
@@ -451,17 +449,14 @@ class MemoryGraph(NeptuneBase):
                 {{metric:"CosineSimilarity"}}
             ) YIELD distance
             WITH n, distance as similarity
-            WHERE similarity >= $threshold 
-            AND n.name IS NOT NULL
+            WHERE similarity >= $threshold
             CALL {{
                 WITH n
                 MATCH (n)-[r]->(m) 
-                WHERE m.name IS NOT NULL
                 RETURN n.name AS source, id(n) AS source_id, type(r) AS relationship, id(r) AS relation_id, m.name AS destination, id(m) AS destination_id
                 UNION ALL
                 WITH n
                 MATCH (m)-[r]->(n) 
-                WHERE m.name IS NOT NULL
                 RETURN m.name AS source, id(m) AS source_id, type(r) AS relationship, id(r) AS relation_id, n.name AS destination, id(n) AS destination_id
             }}
             WITH distinct source, source_id, relationship, relation_id, destination, destination_id, similarity
