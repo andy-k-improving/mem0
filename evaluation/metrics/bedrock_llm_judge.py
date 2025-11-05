@@ -61,6 +61,8 @@ Just return the label CORRECT or WRONG in a json format with the key as "label".
 
 def evaluate_llm_judge(question, gold_answer, generated_answer):
     """Evaluate the generated answer against the gold answer using an LLM judge."""
+    print("----------------------")
+    print(question)
     messages = [
         {
             "role": "user",
@@ -71,8 +73,13 @@ def evaluate_llm_judge(question, gold_answer, generated_answer):
     ]
 
     response = bedrock_llm.generate_response(messages)
-    label = json.loads(extract_json(response))["label"]
-    return 1 if label == "CORRECT" else 0
+    try:
+        label = json.loads(extract_json(response))["label"]
+        return 1 if label == "CORRECT" else 0
+    except Exception as e:
+        print("Error parsing response: ", e)
+        print("Response: ", response)
+        return 0
 
 
 def main():
