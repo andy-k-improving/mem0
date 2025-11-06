@@ -131,7 +131,6 @@ class MemorySearch:
         evidence = val.get("evidence", [])
         adversarial_answer = val.get("adversarial_answer", "")
 
-
         (
             response,
             speaker_1_memories,
@@ -160,7 +159,6 @@ class MemorySearch:
             "speaker_2_graph_memories": speaker_2_graph_memories,
             "response_time": response_time,
         }
-        print("Completing a question....")
 
         # Save results after each question is processed
         with open(self.output_path, "w") as f:
@@ -180,11 +178,6 @@ class MemorySearch:
 
             speaker_a_user_id = f"{speaker_a}_{idx}"
             speaker_b_user_id = f"{speaker_b}_{idx}"
-
-            # items = tqdm(
-            #     qa, total=len(qa), desc=f"Processing questions for conversation {idx}", leave=False
-            # )
-            # self.process_questions_parallel(items, speaker_a_user_id, speaker_b_user_id)
 
             for question_item in tqdm(
                 qa, total=len(qa), desc=f"Processing questions for conversation {idx}", leave=False
