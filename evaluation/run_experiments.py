@@ -35,12 +35,6 @@ def main():
     parser.add_argument("--suffix", type=str, default="_", help="Optional suffix")
 
     args = parser.parse_args()
-    #
-    # args.technique_type="mem0"
-    # args.method = "search"
-    # args.data_path = "../hf_example/dataset_v3/locomo10_2.json"
-    # args.suffix = "2"
-    # args.is_graph=True
 
     # Add your experiment logic here
     print(f"Running experiments with technique: {args.technique_type}, chunk size: {args.chunk_size}")

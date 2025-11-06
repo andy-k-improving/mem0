@@ -18,8 +18,6 @@ load_dotenv()
 
 
 class MemorySearch:
-
-
     def __init__(self, output_path="results.json", top_k=10, filter_memories=False, is_graph=False):
         self.mem0_client = Memory.from_config(config_dict=CONFIG)
         self.top_k = top_k
@@ -41,6 +39,7 @@ class MemorySearch:
         while retries < max_retries:
             try:
                 if self.is_graph:
+                    print("Searching with graph")
                     memories = self.mem0_client.search(
                         query,
                         user_id=user_id,
@@ -108,9 +107,6 @@ class MemorySearch:
         )
 
         t1 = time.time()
-        # response = self.openai_client.chat.completions.create(
-        #     model=os.getenv("MODEL"), messages=[{"role": "system", "content": answer_prompt}], temperature=0.0
-        # )
         response = self.bedrock_client.generate_response(
             messages=[{"role": "user", "content": answer_prompt}],
             temperature=0.0

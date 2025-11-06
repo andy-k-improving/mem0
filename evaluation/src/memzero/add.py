@@ -87,8 +87,8 @@ class MemoryADD:
         speaker_b_user_id = f"{speaker_b}_{idx}"
 
         # delete all memories for the two users
-        # self.mem0_client.delete_all(user_id=speaker_a_user_id)
-        # self.mem0_client.delete_all(user_id=speaker_b_user_id)
+        self.mem0_client.delete_all(user_id=speaker_a_user_id)
+        self.mem0_client.delete_all(user_id=speaker_b_user_id)
 
         for key in conversation.keys():
             if key in ["speaker_a", "speaker_b"] or "date" in key or "timestamp" in key:
