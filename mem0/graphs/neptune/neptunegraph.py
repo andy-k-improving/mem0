@@ -39,8 +39,7 @@ class MemoryGraph(NeptuneBase):
 
         self.llm = NeptuneBase._create_llm(self.config, self.llm_provider)
         self.user_id = None
-        # Use threshold from graph_store config, default to 0.7 for backward compatibility
-        self.threshold = self.config.graph_store.threshold if hasattr(self.config.graph_store, 'threshold') else 0.7
+        self.threshold = 0.7
 
     def _delete_entities_cypher(self, source, destination, relationship, user_id):
         """
@@ -343,7 +342,6 @@ class MemoryGraph(NeptuneBase):
             ) YIELD distance
             WITH source_candidate, distance AS cosine_similarity
             WHERE cosine_similarity >= $threshold
-            AND source_candidate.name IS NOT NULL
 
             WITH source_candidate, cosine_similarity
             ORDER BY cosine_similarity DESC
@@ -381,7 +379,6 @@ class MemoryGraph(NeptuneBase):
                 ) YIELD distance
                 WITH destination_candidate, distance AS cosine_similarity
                 WHERE cosine_similarity >= $threshold
-                AND destination_candidate.name IS NOT NULL
 
                 WITH destination_candidate, cosine_similarity
                 ORDER BY cosine_similarity DESC
@@ -452,16 +449,13 @@ class MemoryGraph(NeptuneBase):
             ) YIELD distance
             WITH n, distance as similarity
             WHERE similarity >= $threshold
-            AND n.name IS NOT NULL
             CALL {{
                 WITH n
                 MATCH (n)-[r]->(m) 
-                WHERE m.name IS NOT NULL
                 RETURN n.name AS source, id(n) AS source_id, type(r) AS relationship, id(r) AS relation_id, m.name AS destination, id(m) AS destination_id
                 UNION ALL
                 WITH n
                 MATCH (m)-[r]->(n) 
-                WHERE m.name IS NOT NULL
                 RETURN m.name AS source, id(m) AS source_id, type(r) AS relationship, id(r) AS relation_id, n.name AS destination, id(n) AS destination_id
             }}
             WITH distinct source, source_id, relationship, relation_id, destination, destination_id, similarity
