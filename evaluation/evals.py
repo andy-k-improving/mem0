@@ -4,7 +4,7 @@ import json
 import threading
 from collections import defaultdict
 
-from metrics.llm_judge import evaluate_llm_judge
+from metrics.bedrock_llm_judge import evaluate_llm_judge
 from metrics.utils import calculate_bleu_scores, calculate_metrics
 from tqdm import tqdm
 

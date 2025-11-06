@@ -7,7 +7,8 @@ from concurrent.futures import ThreadPoolExecutor
 from dotenv import load_dotenv
 from tqdm import tqdm
 
-from mem0 import MemoryClient
+from ..config import CONFIG
+from mem0 import MemoryClient, Memory
 
 load_dotenv()
 
@@ -43,14 +44,9 @@ Generate personal memories that follow these guidelines:
 
 
 class MemoryADD:
-    def __init__(self, data_path=None, batch_size=2, is_graph=False):
-        self.mem0_client = MemoryClient(
-            api_key=os.getenv("MEM0_API_KEY"),
-            org_id=os.getenv("MEM0_ORGANIZATION_ID"),
-            project_id=os.getenv("MEM0_PROJECT_ID"),
-        )
 
-        self.mem0_client.update_project(custom_instructions=custom_instructions)
+    def __init__(self, data_path=None, batch_size=2, is_graph=False):
+        self.mem0_client = Memory.from_config(config_dict=CONFIG)
         self.batch_size = batch_size
         self.data_path = data_path
         self.data = None
@@ -67,7 +63,7 @@ class MemoryADD:
         for attempt in range(retries):
             try:
                 _ = self.mem0_client.add(
-                    message, user_id=user_id, version="v2", metadata=metadata, enable_graph=self.is_graph
+                    message, user_id=user_id, metadata=metadata
                 )
                 return
             except Exception as e:

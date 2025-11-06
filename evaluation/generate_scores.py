@@ -1,9 +1,15 @@
 import json
+import argparse
 
 import pandas as pd
 
+
+parser = argparse.ArgumentParser(description="Generate test score")
+parser.add_argument("--metrics_path", type=str, default="evaluation_metrics.json", help="Path of the metrics")
+args = parser.parse_args()
+
 # Load the evaluation metrics data
-with open("evaluation_metrics.json", "r") as f:
+with open(args.metrics_path, "r") as f:
     data = json.load(f)
 
 # Flatten the data into a list of question items

@@ -39,8 +39,7 @@ class MemoryGraph(NeptuneBase):
 
         self.llm = NeptuneBase._create_llm(self.config, self.llm_provider)
         self.user_id = None
-        # Use threshold from graph_store config, default to 0.7 for backward compatibility
-        self.threshold = self.config.graph_store.threshold if hasattr(self.config.graph_store, 'threshold') else 0.7
+        self.threshold = 0.7
 
     def _delete_entities_cypher(self, source, destination, relationship, user_id):
         """
